@@ -76,6 +76,9 @@ local function getResources()
     resources = convertPrefabstoDisplayNames(resources)
     return resources
 end
+local function updateHUD(player, resources)
+    player.headwidget.text:SetString(resources)
+end
 local function updateAllPlayersHUD(player)
     print("updateAllPlayersHUD")
     local resources = resourceTableToString(getResources())
@@ -83,7 +86,7 @@ local function updateAllPlayersHUD(player)
         if player.headwidget then
             player.headwidget.text:SetString(resources)
         else
-            print(tostring(player).." has no headwidget")
+            SendModRPCToClient(GetClientModRPC("resourceReadoutClient", "updateHUD"))
         end
     end
 end
@@ -113,6 +116,7 @@ AddPlayerPostInit(function (player)
 end)
 
 AddModRPCHandler("resourceReadoutRPC", "OnItemChanged", OnItemChanged)
+AddClientModRPCHandler("resourceReadoutClient", "updateHUD", updateHUD)
 
 GLOBAL.TheInput:AddKeyDownHandler(GLOBAL.KEY_R, function()
     SendResourceReadoutRPC()
@@ -135,4 +139,7 @@ if false then
     TheFrontEnd = TheFrontEnd
     TextScreen = TextScreen
     Text = Text
+    AddClientModRPCHandler = AddClientModRPCHandler
+    SendModRPCToClient = SendModRPCToClient
+    GetClientModRPC = GetClientModRPC
 end
