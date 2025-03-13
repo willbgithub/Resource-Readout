@@ -5,6 +5,7 @@ local blacklist = {
 }
 
 local function getPlayerInventories()
+    print("getPlayerInventories")
     local items = {}
     for _, player in ipairs(GLOBAL.AllPlayers) do
         if player and player.components.inventory then
@@ -21,6 +22,7 @@ local function getPlayerInventories()
     return items
 end
 local function mergeResourceTables(tables)
+    print("mergeResourceTables")
     local mergedTable = {}
     for _, table in pairs(tables) do
       for item, amount in pairs(table) do
@@ -34,6 +36,7 @@ local function mergeResourceTables(tables)
     return mergedTable
 end
 local function resourceTableToString(table)
+    print("resourceTableToString")
     local string = ""
     for item, amount in pairs(table) do
       string = string .. item .. ": " .. amount .. "\n"
@@ -42,6 +45,7 @@ local function resourceTableToString(table)
     return string
 end
 local function tableContains(table, element)
+    print("tableContains")
     for _, item in pairs(table) do
         if item == element then
           return true
@@ -50,9 +54,11 @@ local function tableContains(table, element)
     return false
 end
 local function isBlacklisted(prefab)
+    print("isBlacklisted")
     return tableContains(blacklist, prefab)
 end
 local function convertPrefabstoDisplayNames(table)
+    print("convertPrefabstoDisplayNames")
     local displayTable = {}
     for prefab, count in pairs(table) do
         if not isBlacklisted(prefab) then
@@ -63,12 +69,14 @@ local function convertPrefabstoDisplayNames(table)
     return displayTable
 end
 local function getResources()
+    print("getResources")
     local playerInventories = getPlayerInventories()
     local resources = mergeResourceTables({playerInventories})
     resources = convertPrefabstoDisplayNames(resources)
     return resources
 end
 local function updateAllPlayersHUD(player)
+    print("updateAllPlayersHUD")
     local resources = resourceTableToString(getResources())
     for _, player in ipairs(GLOBAL.AllPlayers) do
         if player.headwidget then
@@ -77,9 +85,11 @@ local function updateAllPlayersHUD(player)
     end
 end
 local function OnItemChanged(player)
+    print("OnItemChanged")
     GLOBAL.TheWorld:DoTaskInTime(0.05, updateAllPlayersHUD)
 end
 local function SendResourceReadoutRPC()
+    print("SendResourceReadoutRPC")
 	SendModRPCToServer(GetModRPC("resourceReadoutRPC", "OnItemChanged"))
 end
 
