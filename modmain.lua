@@ -77,7 +77,11 @@ local function getResources()
     return resources
 end
 local function updateHUD(player, resources)
-    player.headwidget.text:SetString(resources)
+    if player.headwidget then
+        player.headwidget.text:SetString(resources)
+    else
+        print(tostring(player).." has no headwidget")
+    end
 end
 local function updateAllPlayersHUD(player)
     print("updateAllPlayersHUD")
