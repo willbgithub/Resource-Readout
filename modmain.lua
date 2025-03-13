@@ -83,11 +83,12 @@ local function updateAllPlayersHUD(player)
         if player.headwidget then
             player.headwidget.text:SetString(resources)
         else
-            print(player.." has no headwidget")
+            print(tostring(player).." has no headwidget")
         end
     end
 end
 local function OnItemChanged(player)
+    print(player)
     print("OnItemChanged")
     GLOBAL.TheWorld:DoTaskInTime(0.05, updateAllPlayersHUD)
 end
