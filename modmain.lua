@@ -46,7 +46,6 @@ local function resourceTableToString(table)
     return string
 end
 local function tableContains(table, element)
-    print("tableContains")
     for _, item in pairs(table) do
         if item == element then
           return true
@@ -55,7 +54,6 @@ local function tableContains(table, element)
     return false
 end
 local function isBlacklisted(prefab)
-    print("isBlacklisted")
     return tableContains(blacklist, prefab)
 end
 local function convertPrefabstoDisplayNames(table)
@@ -77,7 +75,7 @@ local function getResources()
     return resources
 end
 local function updateHUD(player, resources)
-    print("upateHUD")
+    print("updateHUD")
     if player.headwidget then
         player.headwidget.text:SetString(resources)
     else
