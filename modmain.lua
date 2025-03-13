@@ -71,7 +71,9 @@ end
 local function updateAllPlayersHUD(player)
     local resources = resourceTableToString(getResources())
     for _, player in ipairs(GLOBAL.AllPlayers) do
-        player.headwidget.text:SetString(resources)
+        if player.headwidget then
+            player.headwidget.text:SetString(resources)
+        end
     end
 end
 local function OnItemChanged(player)
