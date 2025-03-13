@@ -77,6 +77,7 @@ local function getResources()
     return resources
 end
 local function updateHUD(player, resources)
+    print("upateHUD")
     if player.headwidget then
         player.headwidget.text:SetString(resources)
     else
