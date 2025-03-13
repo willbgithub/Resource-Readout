@@ -1,7 +1,8 @@
 local FollowText = GLOBAL.require "widgets.followtext"
 local blacklist = {
     "spider_whistle",
-    "lucy"
+    "lucy",
+    "wortox_soul"
 }
 
 local function getPlayerInventories()
@@ -81,6 +82,8 @@ local function updateAllPlayersHUD(player)
     for _, player in ipairs(GLOBAL.AllPlayers) do
         if player.headwidget then
             player.headwidget.text:SetString(resources)
+        else
+            print(player.." has no headwidget")
         end
     end
 end
