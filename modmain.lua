@@ -74,22 +74,12 @@ local function getResources()
     resources = convertPrefabstoDisplayNames(resources)
     return resources
 end
-local function updateHUD(player, resources)
-    print("updateHUD")
-    if player.headwidget then
-        player.headwidget.text:SetString(resources)
-    else
-        print(tostring(player).." has no headwidget")
-    end
-end
 local function updateAllPlayersHUD(player)
     print("updateAllPlayersHUD")
     local resources = resourceTableToString(getResources())
     for _, player in ipairs(GLOBAL.AllPlayers) do
         if player.headwidget then
             player.headwidget.text:SetString(resources)
-        else
-            SendModRPCToClient(GetClientModRPC("resourceReadoutClient", "updateHUD"))
         end
     end
 end
@@ -106,12 +96,14 @@ end
 AddPlayerPostInit(function (player)
     player:DoTaskInTime(1, function(player)
         if player and player.HUD then
+            player.resources = "florp"
+            self.net_resources = net_string(self.inst.GUID, "resources", "resourcesDirty")
             player.headwidget = player.HUD:AddChild(FollowText(GLOBAL.TALKINGFONT, 35))
             player.headwidget:SetHUD(player.HUD.inst)
             player.headwidget:SetOffset(GLOBAL.Vector3(0, -500, 0))
             player.headwidget:SetTarget(player)
             player.headwidget.text:SetColour(1, 1, 1, 1)
-            player.headwidget.text:SetString("GLORP!")
+            player.headwidget.text:SetString(self.resources)
             player.headwidget:Show()
 
         end
@@ -119,8 +111,14 @@ AddPlayerPostInit(function (player)
 end)
 
 AddModRPCHandler("resourceReadoutRPC", "OnItemChanged", OnItemChanged)
-AddClientModRPCHandler("resourceReadoutClient", "updateHUD", updateHUD)
-
+local function OnResourcesDirty(inst)
+	print(inst)
+    print("glorpglorp")
+end
+--in the component's constructor
+if not TheWorld.ismastersim then
+	self.inst:ListenForEvent("resourcesDirty", OnResourcesDirty)
+end
 GLOBAL.TheInput:AddKeyDownHandler(GLOBAL.KEY_R, function()
     SendResourceReadoutRPC()
 end)
@@ -145,4 +143,5 @@ if false then
     AddClientModRPCHandler = AddClientModRPCHandler
     SendModRPCToClient = SendModRPCToClient
     GetClientModRPC = GetClientModRPC
+    net_string = net_string
 end
