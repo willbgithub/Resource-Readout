@@ -74,55 +74,23 @@ local function getResources()
     resources = convertPrefabstoDisplayNames(resources)
     return resources
 end
-local function updateAllPlayersHUD(player)
-    print("updateAllPlayersHUD")
-    local resources = resourceTableToString(getResources())
-    for _, player in ipairs(GLOBAL.AllPlayers) do
-        if player.headwidget then
-            player.headwidget.text:SetString(resources)
-        end
-    end
-end
 local function OnItemChanged(player)
     print(player)
     print("OnItemChanged")
-    GLOBAL.TheWorld:DoTaskInTime(0.05, updateAllPlayersHUD)
+    if player.components.talker then
+        player.components.talker:Say(tostring(player))
+    else
+        print(tostring(player).." has no talker component")
+    end
 end
 local function SendResourceReadoutRPC()
     print("SendResourceReadoutRPC")
 	SendModRPCToServer(GetModRPC("resourceReadoutRPC", "OnItemChanged"))
 end
-
-AddPlayerPostInit(function (player)
-    player:DoTaskInTime(1, function(player)
-        if player and player.HUD then
-            player.resources = "florp"
-            self.net_resources = net_string(self.inst.GUID, "resources", "resourcesDirty")
-            player.headwidget = player.HUD:AddChild(FollowText(GLOBAL.TALKINGFONT, 35))
-            player.headwidget:SetHUD(player.HUD.inst)
-            player.headwidget:SetOffset(GLOBAL.Vector3(0, -500, 0))
-            player.headwidget:SetTarget(player)
-            player.headwidget.text:SetColour(1, 1, 1, 1)
-            player.headwidget.text:SetString(self.resources)
-            player.headwidget:Show()
-
-        end
-    end)
-end)
-
 AddModRPCHandler("resourceReadoutRPC", "OnItemChanged", OnItemChanged)
-local function OnResourcesDirty(inst)
-	print(inst)
-    print("glorpglorp")
-end
---in the component's constructor
-if not TheWorld.ismastersim then
-	self.inst:ListenForEvent("resourcesDirty", OnResourcesDirty)
-end
 GLOBAL.TheInput:AddKeyDownHandler(GLOBAL.KEY_R, function()
     SendResourceReadoutRPC()
 end)
-
 -- EVIL PINK ERRORS BEGONE
 if false then
     print("FLORG: something terrible has happened")
