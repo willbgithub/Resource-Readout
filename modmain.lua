@@ -167,5 +167,6 @@ if false then
     GetClientModRPC = GetClientModRPC
     net_string = net_string
     modname = modname
+    modimport = modimport
     runscript = runscript
 end
